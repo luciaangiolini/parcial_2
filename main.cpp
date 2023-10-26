@@ -30,36 +30,38 @@ int main(int argc, char **argv) {
     string filename;
     filename= argv[1];
     string linea;
-    int i;
-
-    HashMap<string, struct articulo> hashMap(2000,Hash_fun);
-
     fstream archivo;
     archivo.open("./" + filename);
     getline(archivo, linea);
 
-    while (getline(archivo,linea)){
-        articulo a;
-        i = 0;
-        getline(archivo,a.grupo, ',' );
-        getline(archivo,a.cod_barras, ',' );
-        getline(archivo,a.nom_articulo, ',' );
-        getline(archivo,a.depositos[0], ',' );
-        getline(archivo,a.depositos[1], ',' );
-        getline(archivo,a.depositos[2], ',' );
-        getline(archivo,a.depositos[3], ',' );
-        getline(archivo,a.depositos[4], ',' );
-
-        hashMap.put(a.cod_barras,a);
-    }
         string opcion;
         if (::strcmp(argv[2], "-total_art_dif" )==0){
+            while (getline(archivo,linea)){
+                articulo a;
+                getline(archivo,a.grupo, ',' );
+                getline(archivo,a.cod_barras, ',' );
+                getline(archivo,a.nom_articulo, ',' );
+                getline(archivo,a.depositos[0], ',' );
+                getline(archivo,a.depositos[1], ',' );
+                getline(archivo,a.depositos[2], ',' );
+                getline(archivo,a.depositos[3], ',' );
+                getline(archivo,a.depositos[4], ',' );
+                //guardar en pila
+            }
             //linea de codigo para este argumento
         }else if (::strcmp(argv[2], "-total_art" )==0){
             //linea de codigo para este argumento
+        }else if (::strcmp(argv[2], "-min_stock" )==0){
+            //linea de codigo para este argumento
+        }else if (::strcmp(argv[2], "-min_stock_dep" )==0){
+            //linea de codigo para este argumento
+        }else if (::strcmp(argv[2], "-stock" )==0){
+            //linea de codigo para este argumento
+        }else if (::strcmp(argv[2], "-stock_dep" )==0){
+            //linea de codigo para este argumento
+        }else if (::strcmp(argv[2], "-max_stock" )==0){
+            //linea de codigo para este argumento
         }
-
-
     clock_t end = clock();
 
     double elapsed_secs = static_cast<double>(end - begin) / CLOCKS_PER_SEC;
