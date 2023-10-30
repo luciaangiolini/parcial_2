@@ -40,7 +40,6 @@ int main(int argc, char **argv) {
 
     while (getline(archivo,linea)){
         articulo a;
-        i = 0;
         getline(archivo,a.grupo, ',' );
         getline(archivo,a.cod_barras, ',' );
         getline(archivo,a.nom_articulo, ',' );
@@ -49,14 +48,12 @@ int main(int argc, char **argv) {
         getline(archivo,a.depositos[2], ',' );
         getline(archivo,a.depositos[3], ',' );
         getline(archivo,a.depositos[4], ',' );
-
-        hashMap.put(a.cod_barras,a);
     }
-        string opcion;
         if (::strcmp(argv[2], "-total_art_dif" )==0){
             //linea de codigo para este argumento
         }else if (::strcmp(argv[2], "-total_art" )==0){
             //linea de codigo para este argumento
+            cout<<"hola"<<endl;
         }
 
 
