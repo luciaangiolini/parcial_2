@@ -15,7 +15,7 @@ struct articulo {
     string nom_articulo;
     Cola<int> depositos;
 };
-void imprimir_articulos (Pila<articulo> a);
+void imprimir_articulos (Pila<articulo> a, int num);
 int main(int argc, char **argv) {
     clock_t begin;
     cout << "Comenzando a medir Tiempo\n" << endl;
@@ -42,6 +42,18 @@ int main(int argc, char **argv) {
         if (::strcmp(argv[2], "-total_art_dif" )==0){
             //linea de codigo para este argumento
         }else if (::strcmp(argv[2], "-total_art" )==0){
+            articulo a;
+            int cant_total_art = 0;
+            getline(archivo,a.grupo, ',' );
+            getline(archivo,a.cod_barras, ',' );
+            getline(archivo,a.nom_articulo, ',' );
+            for (int i = 0; i < num_depositos; ++i) {
+                getline(archivo,deposito, ',' );
+                while (!a.depositos.esVacia()){
+                    cant_total_art += a.depositos.desencolar();
+                }
+            }
+            cout << "La cantidad total de articulos es: " << cant_total_art << " articulos." << endl;
             //linea de codigo para este argumento
         }else if (::strcmp(argv[2], "-min_stock" )==0){
             while (getline(archivo,linea)){
@@ -64,8 +76,8 @@ int main(int argc, char **argv) {
                 if (cant_stock <= n){
                     pila.push(a);
                 }
+                imprimir_articulos(pila, n);
             }
-            imprimir_articulos(pila);
         }else if (::strcmp(argv[2], "-min_stock_dep" )==0){
             //linea de codigo para este argumento
         }else if (::strcmp(argv[2], "-stock" )==0){
@@ -82,4 +94,11 @@ int main(int argc, char **argv) {
     cout << "Tiempo transcurrido: " << elapsed_secs << "\n" << std::endl;
 
     return 0;
+}
+//funcion para imprimir art, usada en argumento -min_stock
+void imprimir_articulos (Pila<articulo> a, int num){
+    cout << "Listado de artículos con cantidad <= " << num << " de stock: " << endl;
+    while (!a.esVacia()){
+        cout << a.pop().nom_articulo << endl;
+    }
 }
