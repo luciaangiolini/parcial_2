@@ -65,24 +65,6 @@ int encontrarPosArticulo(string nombreArticulo, string fileName) // función que
 void totalArticulosDiferentes(string fileName){
     fstream fin;
     fin.open("./"+fileName, ios::in);
-    Lista<string> grupos;
-    string line, palabra;
-    int confirmed = 0;
-    int articulosDiferentes;
-    while(getline(fin,line)){
-        stringstream s(line);
-        getline(s,palabra,';');
-        if(palabra.size()>=1 && palabra!="Grupo"){
-            if(palabra.find("ERROR")==std::string::npos)
-                grupos.insertarUltimo(palabra);
-        }
-    }
-    articulosDiferentes=grupos.getTamanio();
-    cout << "Hay " << articulosDiferentes << " articulos diferentes." << endl;
-}
-void totalArticulos(string fileName){
-    fstream fin;
-    fin.open("./"+fileName, ios::in);
     string line, palabra;
     int total = -1;
     while(getline(fin,line)){
@@ -95,6 +77,9 @@ void totalArticulos(string fileName){
         }
     }
     cout<< "El total de articulos es " << total<< endl;
+}
+void totalArticulos(string fileName){
+    
 }
 void minStock(string n, string fileName){
     fstream fin;
