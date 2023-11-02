@@ -8,60 +8,6 @@
 
 using namespace std;
 
-vector<vector<string>> leerArchivo(string fileName){
-    fstream fin;
-    fin.open("./"+fileName, ios::in);
-    vector<string>row; // lista para que cada fila sea una lista
-    string line, palabra;
-    vector<vector<string>> data;
-    while(getline(fin,line)){
-        row.clear();
-        stringstream s(line);
-        while(getline(s,palabra,';')){
-            if(palabra.size()<1)
-                palabra = "0";
-            row.push_back(palabra);
-        }
-        data.push_back(row);
-    }
-    return data;
-}
-int encontrarPosArticulo(string nombreArticulo, string fileName) // función que devuelve la posición del articulo
-{
-    fstream fin;
-    fin.open("./" + fileName, ios::in);
-    vector<string> row;
-    vector<vector<string>> data;
-    string line, palabra;
-    int total=-1;
-    while (getline(fin, line))
-    {
-        total++;
-        row.clear();
-        stringstream s(line);
-        while (getline(s, palabra, ';'))
-        {
-            if (palabra.size() < 1)
-                palabra = "NA";
-            row.push_back(palabra);
-        }
-        data.push_back(row);
-    }
-
-    for (int i = 0; i <= total; i++)
-    {
-        for (int j = 0; j < data[i].size(); j++)
-        {
-            if (data[i][j] == nombreArticulo)
-            {
-                return i;
-            }
-
-        }
-    }
-    return 0;
-}
-
 void totalArticulosDiferentes(string fileName){
     fstream fin;
     fin.open("./"+fileName, ios::in);
@@ -122,43 +68,70 @@ void minStockDep(string nombreArticulo, string nDep, string fileName){
 
 void stock(string nombreArticulo, string fileName)
 {
-    vector<vector<string>> data;
-    data = leerArchivo(fileName);
-    int n; // variable para encontrar la posición
-    int n2=0;
-    n = encontrarPosArticulo(nombreArticulo,fileName); // posición
+    fstream fin;
+    fin.open("./"+fileName, ios::in);
+    Lista<string> articulos; // lista para que cada fila sea una lista
+    string line, palabra;
     Lista<int> depositos;
-    for (int j = 3; j < data[n].size(); j++)
-    {
-        n2 = atoi(data[n][j].c_str()); // convierte la variable a int
-
-        depositos.insertarUltimo(n2);
-    }
     int suma=0;
-    for (int j = 0; j<depositos.getTamanio(); j++)
-    {
-        suma+=depositos.getDato(j);
+    getline(fin, line);
+    while(getline(fin,line)){
+        stringstream s(line);
+        getline(s,palabra,';');
+        getline(s,palabra,';');
+        getline(s,palabra,';');
+        if(palabra==nombreArticulo){
+            while(getline(s,palabra,';')){
+                 depositos.insertarUltimo(atoi(palabra.c_str()));
+            }
+            break;
+        }
     }
+    for (int j=0; j<depositos.getTamanio(); j++){
+            suma+=depositos.getDato(j);
+        }
     cout<<"El stock de " << nombreArticulo<< " es: "<< suma<<endl;
 }
 void stockDep(string nombreArticulo, string nDep, string fileName){
-    vector<vector<string>> data;
-    Lista<string> stock;
-    data = leerArchivo(fileName);
-    int n, n2 = 0, nDep2=0;
-    nDep2 = atoi(nDep.c_str()); // casting de string a int
-    n = encontrarPosArticulo(nombreArticulo, fileName);
+    fstream fin;
+    fin.open("./"+fileName, ios::in);
+    Lista<string> articulos; // lista para que cada fila sea una lista
+    string line, palabra;
     Lista<int> depositos;
-    for (int j = 3; j <=data[n].size(); j++)
-    {
-        n2 = atoi(data[n][j].c_str()); // convierte la variable a int
-
-        depositos.insertarUltimo(n2);
+    int stock, n2=atoi(nDep.c_str()), i=0;
+    getline(fin, line);
+    while(getline(fin,line)){
+        stringstream s(line);
+        getline(s,palabra,';');
+        getline(s,palabra,';');
+        getline(s,palabra,';');
+        if(palabra==nombreArticulo){
+            while(getline(s,palabra,';')){
+                if(palabra.size()<1)
+                {
+                    palabra="0";
+                }
+                depositos.insertarUltimo(atoi(palabra.c_str()));
+            }
+            break;
+        }
     }
-
-    cout<<"El numero de stock de "<< nombreArticulo<<" del deposito "<< nDep << " es  de "<<depositos.getDato(nDep2-1)<<" articulos"<<endl;
-
-
+    fin.close();
+    fin.clear();
+    fin.open("./"+fileName, ios::in);
+    getline(fin,line);
+    stringstream s(line);
+    getline(s,palabra,';');
+    getline(s,palabra,';');
+    getline(s,palabra,';');
+    while(getline(s,palabra, ';'))
+        i++;
+    if(n2==i && depositos.getTamanio()<i){
+        stock=0;
+    }
+    else
+        stock=depositos.getDato(n2-1);
+    cout<<"El stock de " << nombreArticulo<< " en el deposito "<< n2<< " es: "<< stock<<endl;
 }
 void maxStock(string n, string fileName){
     fstream fin;
