@@ -25,7 +25,35 @@ void totalArticulosDiferentes(string fileName){
     cout<< "El total de articulos es " << total<< endl;
 }
 void totalArticulos(string fileName){
-    
+    fstream fin;
+    fin.open("./"+fileName, ios::in);
+    string line, palabra;
+    int total=0;
+    getline(fin, line);
+    while(getline(fin,line)){
+        stringstream s(line);
+        getline(s,palabra,',');
+        getline(s,palabra,',');
+        getline(s,palabra,',');
+        if(palabra.find("ERROR")!=std::string::npos ){
+            while(getline(s,palabra,',')){
+                if(palabra.size()<1)
+                {
+                    palabra="0";
+                }
+                total -= atoi(palabra.c_str());
+            }
+        }else{
+            while(getline(s,palabra,',')){
+                if(palabra.size()<1)
+                {
+                    palabra="0";
+                }
+                total += atoi(palabra.c_str());
+            }
+        }
+    }
+    cout<< "El total de articulos es " << total << endl;
 }
 void minStock(string n, string fileName){
     fstream fin;
@@ -42,7 +70,7 @@ void minStock(string n, string fileName){
         suma=0;
         depositos.vaciar();
         stringstream s(line);
-        while(getline(s,palabra,';')){
+        while(getline(s,palabra,',')){
             i++;
             if(i==3)
                 nombreArticulo = palabra;
@@ -62,7 +90,37 @@ void minStock(string n, string fileName){
         cout<< articulos.getDato(i)<< endl;
     }
 }
-void minStockDep(string nombreArticulo, string nDep, string fileName){
+void minStockDep(string nDep,string ncant, string fileName){
+    fstream fin;
+    fin.open("./"+fileName, ios::in);
+    Lista<string> articulos;
+    string line, palabra, nombre_articulo;
+    Lista<int> depositos;
+    int n2=atoi(nDep.c_str()), i, n_min=atoi(ncant.c_str());
+    getline(fin, line);
+    while(getline(fin,line)){
+        stringstream s(line);
+        getline(s,palabra,',');
+        getline(s,palabra,',');
+        getline(s,palabra,',');
+        nombre_articulo= palabra;
+        i=0;
+            while(getline(s,palabra,',')){
+                i++;
+                if (i == n2){
+                    if (::atoi(palabra.c_str())<= n_min){
+                        articulos.insertarUltimo(nombre_articulo);
+                    }
+                }
+
+            }
+    }
+    fin.close();
+
+    cout<<"El listado de articulos con stock menor o igual a " <<ncant << " en el deposito "<< n2<< " es: "<<endl;
+    for (int j = 0; j < articulos.getTamanio(); ++j) {
+        cout <<"-"<< articulos.getDato(j)<<endl;
+    }
 
 }
 
@@ -77,11 +135,11 @@ void stock(string nombreArticulo, string fileName)
     getline(fin, line);
     while(getline(fin,line)){
         stringstream s(line);
-        getline(s,palabra,';');
-        getline(s,palabra,';');
-        getline(s,palabra,';');
+        getline(s,palabra,',');
+        getline(s,palabra,',');
+        getline(s,palabra,',');
         if(palabra==nombreArticulo){
-            while(getline(s,palabra,';')){
+            while(getline(s,palabra,',')){
                  depositos.insertarUltimo(atoi(palabra.c_str()));
             }
             break;
@@ -102,11 +160,11 @@ void stockDep(string nombreArticulo, string nDep, string fileName){
     getline(fin, line);
     while(getline(fin,line)){
         stringstream s(line);
-        getline(s,palabra,';');
-        getline(s,palabra,';');
-        getline(s,palabra,';');
+        getline(s,palabra,',');
+        getline(s,palabra,',');
+        getline(s,palabra,',');
         if(palabra==nombreArticulo){
-            while(getline(s,palabra,';')){
+            while(getline(s,palabra,',')){
                 if(palabra.size()<1)
                 {
                     palabra="0";
@@ -121,10 +179,10 @@ void stockDep(string nombreArticulo, string nDep, string fileName){
     fin.open("./"+fileName, ios::in);
     getline(fin,line);
     stringstream s(line);
-    getline(s,palabra,';');
-    getline(s,palabra,';');
-    getline(s,palabra,';');
-    while(getline(s,palabra, ';'))
+    getline(s,palabra,',');
+    getline(s,palabra,',');
+    getline(s,palabra,',');
+    while(getline(s,palabra, ','))
         i++;
     if(n2==i && depositos.getTamanio()<i){
         stock=0;
@@ -148,7 +206,7 @@ void maxStock(string n, string fileName){
         suma=0;
         depositos.vaciar();
         stringstream s(line);
-        while(getline(s,palabra,';')){
+        while(getline(s,palabra,',')){
             i++;
             if(i==3)
                 nombreArticulo = palabra;
@@ -178,42 +236,34 @@ int main(int argc, char** argv)
     std::cout << "Comenzando a medir Tiempo\n" << endl;
     begin = clock();
 
-    for(int i =0;i<argc;i++){
-        if (strcmp(argv[i+1], "total_art_dif") == 0)
+
+        if (strcmp(argv[1], "total_art_dif") == 0)
         {
-            totalArticulosDiferentes(argv[i+2]);
-            break;
+            totalArticulosDiferentes(argv[2]);
         }
-        else if(strcmp(argv[i+1], "total_art") == 0)
+        else if(strcmp(argv[1], "total_art") == 0)
         {
-            totalArticulos(argv[i+2]);
-            break;
+            totalArticulos(argv[2]);
         }
-        else if(strcmp(argv[i+1], "min_stock") == 0 && argc == 5){
-            minStockDep(argv[i+2],argv[i+3],argv[i+4]);
-            break;
+        else if(strcmp(argv[1], "min_stock") == 0 && argc == 5){
+            minStockDep(argv[2],argv[3],argv[4]);
         }
-        else if(strcmp(argv[i+1], "stock") == 0 && argc == 4)
+        else if(strcmp(argv[1], "stock") == 0 && argc == 4)
         {
-            stock(argv[i+2],argv[i+3]);
-            break;
+            stock(argv[2],argv[3]);
         }
-        else if(strcmp(argv[i+1], "stock")== 0 && argc == 5)
+        else if(strcmp(argv[1], "stock")== 0 && argc == 5)
         {
-            stockDep(argv[i+2],argv[i+3],argv[i+4]);
-            break;
+            stockDep(argv[2],argv[3],argv[4]);
 
         }
-        else if(strcmp(argv[i+1], "max_stock") == 0){
-            maxStock(argv[i+2],argv[i+3]);
-            break;
+        else if(strcmp(argv[1], "max_stock") == 0){
+            maxStock(argv[2],argv[3]);
         }
-        else if(strcmp(argv[i+1], "min_stock") == 0){
-            minStock(argv[i+2],argv[i+3]);
-            break;
+        else if(strcmp(argv[1], "min_stock") == 0){
+            minStock(argv[2],argv[3]);
         }
 
-    }
     clock_t end = clock();
     double elapsed_secs = static_cast<double>(end - begin) / CLOCKS_PER_SEC;
     std::cout << "Tiempo transcurrido: " << elapsed_secs << "\n" << std::endl;
